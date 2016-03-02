@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import urllib2
+from collections import defaultdict
 
 def get_page(url):
     try:
@@ -11,13 +12,15 @@ def get_all_links(content):
     links=[]
     url, end_quote = get_next_target(content)
     content = content[end_quote:]
-    links.append(url)
+    if url[0:4] == "http":
+        links.append(url)
     
     while(len(url) !=0):
         url, end_quote=get_next_target(content)
-        print url
         content = content[end_quote:]
-        links.append(url)
+        if url[0:4] == "http":
+            #  print url
+            links.append(url)
     
     return links
 
@@ -33,8 +36,48 @@ def get_next_target(content):
         end_quote = 0
     return url, end_quote
 
-def add_page
+def add_to_index(index, link, keyword):
+    for word in keyword:
+        if (link not in index[word]):
+            index[word].append(link)
+
+def add_page_to_index(index, link, content):
+    tempkey = content.split()
+    keyword = []
+    for word in tempkey:
+        if(word not in keyword):
+            keyword.append(word)
+    add_to_index(index, link, keyword)
 
 
-content = get_page("https://www.lri.fr")
-links = get_all_links(content)
+def union(outlinks, to_crawl):
+    to_crawl.extend(outlinks)
+
+def compute_ranks(graph):
+
+
+
+count = 0
+seed = "https://www.lri.fr"
+to_crawl=[]
+to_crawl.append(seed)
+index = defaultdict(list)
+crawled=[]
+graph = defaultdict(list)
+
+while (len(to_crawl) != 0):
+    if count > 10:
+        break
+    link = to_crawl.pop(0)
+    print "I am here"
+    print link
+    content = get_page(link)
+    outlinks = get_all_links(content)
+    add_page_to_index(index, link, content)
+    union(outlinks, to_crawl)
+    crawled.append(link)
+    graph[link].extend(outlinks)
+    count += 1
+
+
+
