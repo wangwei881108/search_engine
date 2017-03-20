@@ -1,0 +1,14 @@
+graph G {
+
+	bag1 [label="U5 U6 "]
+	bag2 [label="A2 U5 \nU6 "]
+	bag3 [label="A2 U5 \nC4 "]
+	bag4 [label="A2 C4 \nC3 "]
+	bag5 [label="A2 U6 \nA1 "]
+
+	bag2 -- bag3
+	bag2 -- bag5
+	bag1 -- bag2
+	bag3 -- bag4
+
+}
